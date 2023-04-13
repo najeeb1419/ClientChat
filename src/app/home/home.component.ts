@@ -10,8 +10,8 @@ import { ChatService } from '../services/chat.service';
 export class HomeComponent implements OnInit {
   userForm: FormGroup = new FormGroup({});
   submitted = false;
-
-
+  openChat = false;
+  error = '';
   constructor(private formBuilder: FormBuilder, private chatService: ChatService) {
 
   }
@@ -26,12 +26,29 @@ export class HomeComponent implements OnInit {
   }
 
   submitForm() {
+    this.error = '';
     this.submitted = true;
     if (this.userForm.valid) {
-      this.chatService.registerUser(this.userForm.value).subscribe(res => {
-        console.log(res);
-      })
+      this.chatService.registerUser(this.userForm.value).subscribe(
+        () => {
+          this.chatService.myName = this.userForm.get('name')?.value;
+          this.openChat = true;
+          this.userForm.reset();
+          this.submitted = false;
+        },
+        error => {
+          this.error = "This user already exist";
+        },
+        () => {
+          // 'onCompleted' callback.
+          // No errors, route to new page here
+        }
+      );
     }
+  }
+
+  closeChat() {
+    this.openChat = false;
   }
 
 }

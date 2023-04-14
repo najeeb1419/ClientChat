@@ -1,26 +1,22 @@
 <div class="row">
     <div class="col-md-3">
         <button class="btn btn-warning mb-3" (click)="backToHome()">Back To Home</button>
-        <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action active">
-                {{chatService.myName}}
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-            <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-            <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-            <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+        <div class="list-group" *ngFor="let user of _chatService.onlineUsers">
+            <button type="button" class="list-group-item list-group-item-action  mt-2"
+                (dblclick)="openPrivateChat(user)" [ngClass]="{'active':user ===_chatService.myName}" [disabled]="">
+                {{user}}
+            </button>
         </div>
 
     </div>
     <div class="col-md-9 ">
+
         <div class="card border-secondary">
-            <div class="cart-header h3 text-muted text -center">Messages</div>
-            <h3>Some Messages Here</h3>
-
-            <div class="cart-footer">
-                <input type="tex" class="form-control"> <button>submit</button>
-            </div>
+            <app-messages [messages]="_chatService.messages"></app-messages>
+            <app-chat-input (contentEmitter)="sendMessage($event)"></app-chat-input>
         </div>
-
     </div>
+
+
+
 </div>
